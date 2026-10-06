@@ -1,0 +1,51 @@
+{
+  "grab": {
+    "over_conceder": 0.86,
+    "hard_anchorer": 0.45,
+    "tit_for_tat": 0.648,
+    "unknown": 0.6
+  },
+  "barg_delta_coeff": 0.62,
+  "barg_arch_bump": {
+    "over_conceder": 0.11,
+    "hard_anchorer": 0.03,
+    "tit_for_tat": 0.0,
+    "unknown": 0.0
+  },
+  "barg_offer_bump": 0.08,
+  "barg_share_cap": 0.742,
+  "neg_keep_coeff": 0.3,
+  "neg_keep_floor": 0.09,
+  "classify": {
+    "conc_over": 0.5,
+    "conc_hard": 0.08,
+    "gen_hard": 0.304
+  },
+  "persuasion": {
+    "sell_low_bias": 0.0,
+    "buyer_skepticism": 0.0,
+    "pers_low_push_unknown": 0.0,
+    "buyer_margin": 0.0,
+    "pers_honest_p": 0.0,
+    "pers_low_push_endgame": 2,
+    "buyer_explore_rounds": 3,
+    "buyer_prior_a": 3.0,
+    "buyer_prior_b": 1.0,
+    "buyer_prior_k": 2.0,
+    "pers_kg": 1,
+    "pers_kg_cap": 0.85,
+    "buyer_hedge_skip": 1,
+    "pers_hedge_pmax": 0.6,
+    "buyer_neutral_penalty": 0.1
+  },
+  "barg_accept_floor": 0.45,
+  "neg_accept_keep": 0.02,
+  "barg_patience_k": 1.2,
+  "barg_accept_forward": 1,
+  "neg_ci_hz_accept": 1,
+  "neg_msg_reservation": 0,
+  "neg_msg_eps": 0.02,
+  "neg_close_enable": 0,
+  "neg_ci_known_accept": 0,
+  "neg_ci_known_prog": 0.6
+}

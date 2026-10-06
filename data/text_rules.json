@@ -1,0 +1,33 @@
+{
+  "over_conceder": [
+    "find a fair",
+    "fair number",
+    "close a fair deal",
+    "haggle forever",
+    "rather close",
+    "close early",
+    "too rich for me",
+    "here's what works",
+    "here's a counter",
+    "still works for me"
+  ],
+  "hard_anchorer": [
+    "alternative buyer",
+    "only trade",
+    "fixed price",
+    "my floor",
+    "above a floor",
+    "what it is worth to me",
+    "close immediately",
+    "we are done",
+    "take it or leave it"
+  ],
+  "tit_for_tat": [],
+  "impatient": [
+    "waiting costs us",
+    "settle now",
+    "close it now",
+    "finalize this today",
+    "come on"
+  ]
+}

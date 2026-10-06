@@ -1,0 +1,40 @@
+{
+  "negotiation": {
+    "seller": [
+      "Premium unit, priced right. I've got other interested buyers, so this is where I need to be.",
+      "I only trade above my floor here. Meet me at this number and we're done today.",
+      "That's under what it's genuinely worth to me. I can close immediately at my price.",
+      "Happy to close cleanly rather than haggle for rounds, but not below this. This is firm."
+    ],
+    "buyer": [
+      "That's over my ceiling, honestly. Here's what actually works on my side, let's find a fair number and close.",
+      "I want this deal, but that's too rich for me. Meet me partway and it's done.",
+      "This is genuinely my budget. I'd rather settle now than drag it out, can you work with this?",
+      "Fair offer from my end given what I can spend. No sense haggling forever."
+    ]
+  },
+  "bargaining": {
+    "any": [
+      "Waiting costs us both, every round shrinks the pot. Here's a fair split, let's close it now.",
+      "I'd rather settle cleanly now than trade value away round by round. This is fair for both of us.",
+      "Delay only erodes what's on the table. Take this fair number and we're done."
+    ]
+  },
+  "persuasion": {
+    "high": [
+      "This one's genuinely strong this round, I'd buy it. Clear value here.",
+      "Solid pick this round, honestly \u2014 worth buying.",
+      "This one's genuinely strong this round, I'd buy it. Clear value here."
+    ],
+    "low": [
+      "I'd hold off this round, not a strong one.",
+      "Being straight with you: I do not recommend this one \u2014 I'd pass.",
+      "Not this round \u2014 I'd hold off. Better to wait for a better one."
+    ],
+    "unknown": [
+      "Reasonable pick this round, your call.",
+      "Middling round, nothing that stands out either way.",
+      "Fair option this round."
+    ]
+  }
+}

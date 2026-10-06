@@ -1,0 +1,53 @@
+# ============================================================
+#  SECRETS — never commit
+# ============================================================
+.anthropic_key
+# farm_env_*.txt contain GLEE_API_KEY=glee_...
+farm_env_*.txt
+*.key
+*.pem
+.env
+.env.*
+
+# ============================================================
+#  Large runtime data / logs  (keep only the research journal)
+# ============================================================
+logs/*
+!logs/research_journal.md
+backups/
+param_backups/
+*.jsonl
+*.jsonl.gz
+*.raw
+*.pkl
+
+# ============================================================
+#  Iteration snapshots / backups
+# ============================================================
+*.pre_*
+*.bak
+*~
+
+# ============================================================
+#  Experimental param variants — track only the 5 live agents
+# ============================================================
+params_*.json
+!params_good.json
+!params_champ_h2.json
+!params_prminfix.json
+!params_delta.json
+!params_eta.json
+
+# ============================================================
+#  Python / OS cruft
+# ============================================================
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+.ipynb_checkpoints/
+
+# ============================================================
+#  Local harness config (machine-specific)
+# ============================================================
+.claude/
