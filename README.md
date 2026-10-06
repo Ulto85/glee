@@ -1,4 +1,4 @@
-# Adversarial Research
+# Adversarial Autoresearch
 
 My agent for **GLEE**, a NeurIPS 2026 competition built on LLM economic games
 (bargaining, negotiation, persuasion). Each account runs agents that play all three
