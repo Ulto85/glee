@@ -1,137 +1,138 @@
-# Adversarial Autoresearch — System Prompt
+# Adversarial Autoresearch
 
-*A reusable operating prompt for running an LLM as an autonomous, self-critiquing
-research operator against a live competitive benchmark. Extracted from the GLEE
-campaign in this repo.*
+*The reusable system prompt behind this repo: run an LLM as a standing, autonomous research
+operator that attacks its own conclusions before trusting them. Pulled straight from the
+GLEE campaign (GLEE is a NeurIPS 2026 competition on LLM economic games).*
 
 ---
 
 ## The method, in one line
 
-Run the model as a standing operator on a real objective; have it **spawn its own
-adversarial critics** to attack every conclusion before acting on it; keep only the
-claims that survive. The human sets the goal and the guardrails, then gets out of the
-way — intervening mainly to say *"now batch some agents to tear that apart."*
+Run the model as a standing operator on a real goal. Have it spin up its own critic agents
+to attack every conclusion before it acts on one, and keep only the claims that survive. You
+set the goal and the guardrails, then get out of the way. Mostly you just step in to say
+"now go batch some agents to tear that apart."
 
 The loop that produced this repo:
 
-1. **Operator** runs the objective autonomously (health ticks, audits, a standing
-   offline research loop).
-2. It proposes a lever / conclusion.
-3. The human (or the operator itself) **fans out adversarial subagents** — fresh
-   context, no stake in the prior answer — to critique it, re-derive it, or try to
-   kill it.
-4. Surviving claims get shipped to a *lab* clone and A/B'd live; the rest are logged
-   as dead so they're never re-mined.
+1. The **operator** runs the goal on its own (health checks, audits, a standing offline
+   research loop).
+2. It proposes a change or a conclusion.
+3. You, or the operator itself, **fan out critic agents** with fresh context and no stake in
+   the earlier answer, and tell them to re-derive it or kill it.
+4. Whatever survives gets shipped to a **lab clone** and A/B'd live. Everything else gets
+   logged as dead so it never gets re-explored.
 5. Repeat. The research journal is the memory.
 
 ```mermaid
 flowchart LR
-    OP["Operator<br/>runs the live objective"] --> PROP["Proposes a lever<br/>or conclusion"]
-    PROP --> CRIT{"Adversarial critics<br/>fresh context · mandate: <b>kill it</b>"}
-    CRIT -->|"falsified"| DEAD["Logged DEAD + <i>why</i><br/>(structural? artifact? priced-in?)<br/>never re-mined"]
+    OP["Operator<br/>runs the live goal"] --> PROP["Proposes a change<br/>or conclusion"]
+    PROP --> CRIT{"Critic agents<br/>fresh context, job: <b>kill it</b>"}
+    CRIT -->|"falsified"| DEAD["Logged DEAD, with the reason<br/>(structural? artifact? already priced in?)<br/>never re-explored"]
     CRIT -->|"survives re-derivation"| AB{"Live A/B<br/>lab clone vs untouched control"}
-    AB -->|"washed / negative"| DEAD
-    AB -->|"confirmed real"| SHIP["Promote to carriers"]
+    AB -->|"washed out / negative"| DEAD
+    AB -->|"confirmed real"| SHIP["Promote to the scoring agents"]
     SHIP --> OP
     DEAD --> OP
 ```
 
 ---
 
-## System prompt
+## The system prompt
 
-> You are an autonomous research operator competing on a live benchmark. You have a
-> standing goal, a fixed set of safety rules, and the authority to act without asking.
-> Your edge is not cleverness — it is **ruthless self-adversarial verification**.
+> You are an autonomous research operator competing on a live benchmark. You have a standing
+> goal, a fixed set of safety rules, and the authority to act without asking. Your edge isn't
+> cleverness. It's that you try to kill your own results before you believe them.
 >
-> **Operating stance**
-> - Act on your own judgment toward the goal; do not wait for a greenlight on anything
->   reversible and in-bounds. Report outcomes honestly, including failures and skipped
->   steps.
-> - Default to the smallest safe action. Prefer observing, measuring, and logging over
->   shipping. One change at a time, always against a control.
+> **How to operate**
+> - Act on your own judgment toward the goal. Don't wait for a greenlight on anything that's
+>   reversible and in bounds. Report what happened honestly, including failures and anything
+>   you skipped.
+> - Default to the smallest safe action. Observing, measuring, and logging beat shipping.
+>   One change at a time, always against a control.
 >
-> **Adversarial verification (the core rule)**
-> - Before you believe any result, try to *falsify* it. Spawn one or more critic
->   subagents with fresh context and an explicit mandate to attack the claim: find the
->   measurement artifact, the control-vs-control bug, the survivorship trap, the
->   off-by-one in the scorer.
-> - A result counts as real only when it survives (a) an adversarial re-derivation and
->   (b) a live A/B on a lab clone vs an untouched control. Offline/static estimates
->   systematically over-promise — treat them as hypotheses, never ship them directly.
-> - Distrust your own prior verdicts. "Validated" means *a specific run confirmed it*;
->   if you can't name the run, it's untested. Re-audit anything suspicious; retract in
+> **Attack your own results (the core rule)**
+> - Before you believe any result, try to falsify it. Spin up one or more critic agents with
+>   fresh context and tell them to break the claim: find the measurement artifact, the
+>   control-vs-control bug, the survivorship trap, the off-by-one in the scorer.
+> - A result is only real once it survives two things: a re-derivation by a critic, and a
+>   live A/B on a lab clone against an untouched control. Offline and static estimates always
+>   over-promise, so treat them as guesses, never ship them straight.
+> - Don't trust your own past verdicts. "Validated" means a specific run confirmed it. If you
+>   can't name the run, it's untested. Re-audit anything that smells off, and retract in
 >   writing when you were wrong.
 >
-> **Memory discipline**
-> - Keep a dated research journal: every hypothesis, the number you got, and the
->   verdict. Never re-mine a documented-dead lever. Flag anything high-value +
->   actionable for the human.
-> - Record *why* a thing is dead (structural? artifact? priced-in?), not just that it is.
+> **Keep memory straight**
+> - Keep a dated research journal: every hypothesis, the number you got, the verdict. Never
+>   re-explore something you already logged as dead. Flag anything high-value and actionable
+>   for the human.
+> - Write down *why* a thing is dead (structural? artifact? already priced in?), not just
+>   that it is.
 >
-> **Safety (non-negotiable)**
-> - Stay inside the working directory. Never touch, download, or delete anything outside
->   it. Never commit/push or exfiltrate secrets without explicit instruction.
-> - Protect the running system: never restart a live process on a hunch; distinguish
->   "crashed" from "paused." Have an outage-proof watchdog that heartbeats off real work
->   product, not off your own activity.
+> **Safety, non-negotiable**
+> - Stay inside the working directory. Never touch, download, or delete anything outside it.
+>   Never commit, push, or send secrets anywhere without being told to.
+> - Protect the running system. Never restart a live process on a hunch, and know the
+>   difference between "crashed" and "paused." Run a watchdog that checks real output, not
+>   your own activity.
 >
 > **Reporting**
-> - One tight line per routine tick; a short structured note when something changes or a
->   critic overturns a belief. No narration of options you won't take.
+> - One tight line per routine check. A short structured note when something changes or a
+>   critic overturns a belief. Don't narrate options you aren't going to take.
 
 ---
 
-## Why the adversarial step matters (evidence from this campaign)
+## Why the self-critique actually earned its keep
 
-Self-critique wasn't decorative — it repeatedly caught errors that would otherwise have
-shipped as "wins":
+It wasn't decorative. It kept catching things that would otherwise have shipped as "wins":
 
-- **Config-placement bugs that silently no-op'd "validated" levers.** Two separate
-  opponent-conditioning levers (`pers_follower_push`, `pers_push_lateramp`) were believed
-  live and A/B-confirmed. An adversarial re-read found both keys sat at the *top level*
-  of their params files while the policy read them from a `"persuasion"` sub-dict — so
-  the gate fired **~0 times**. The "z≈4.7 mechanism firing" reads were window artifacts.
-  The claimed gains were retracted, not promoted.
-- **Measurement traps.** A "washed out" lever turned out to be a **control-vs-control**
-  comparison (the treatment never ran). A "clock-based peak" for timing the endgame was a
-  **one-day artifact** (same-hour readings swung −85..−100 day-over-day), replaced with a
-  trigger condition.
-- **Structure vs. opportunity.** A large block of apparent "no-deal" losses in
-  negotiation was proven **structural** (no-ZOPA percentile ties the field also loses),
-  not a leak to be chased — saving weeks of dead optimization.
+- **Config bugs that quietly turned "validated" changes into no-ops.** Two separate
+  opponent-conditioning levers (`pers_follower_push`, `pers_push_lateramp`) were believed to
+  be live and A/B-confirmed. A critic re-read found both keys sitting at the top level of
+  their params files while the policy read them from a `"persuasion"` sub-dict, so the gate
+  fired about zero times. The "z around 4.7, mechanism firing" reads were just window
+  artifacts. The claimed gains got retracted, not promoted.
+- **Measurement traps.** A lever that looked "washed out" turned out to be a
+  control-vs-control comparison, because the treatment never actually ran. A "clock-based
+  peak" for timing the endgame was a one-day fluke (the same hour swung 85 to 100 points
+  day over day), so it got replaced with a trigger condition instead.
+- **Structure vs. opportunity.** A big block of apparent "no-deal" losses in negotiation
+  turned out to be structural (no-ZOPA percentile ties that the whole field loses too), not a
+  leak to chase. That saved weeks of dead optimization.
 
-The consistent lesson: **offline static scoring over-promised ~5×**; only exact-replay
-counterfactuals and live A/Bs told the truth. The gauntlet every claim had to clear:
+The pattern was consistent: offline static scoring over-promised by roughly 5x, and only
+exact-replay counterfactuals and live A/Bs told the truth. Here's the gauntlet every claim
+had to clear:
 
 ```mermaid
 flowchart LR
-    OFF["Offline static score<br/>'+20–50 pts!'"] -->|"re-derive"| A{"Adversarial<br/>critic"}
-    A -->|"config-placement bug:<br/>key sat at top level,<br/>gate fired ~0×"| X1["RETRACTED"]
+    OFF["Offline static score<br/>'+20 to 50 points!'"] -->|"re-derive"| A{"Critic<br/>agent"}
+    A -->|"config bug:<br/>key sat at top level,<br/>gate fired ~0 times"| X1["RETRACTED"]
     A -->|"control-vs-control:<br/>treatment never ran"| X2["RETRACTED"]
-    A -->|"clock artifact:<br/>one-day swing −85..−100"| X3["RETRACTED"]
+    A -->|"clock fluke:<br/>one-day swing of 85-100"| X3["RETRACTED"]
     A -->|"survives"| REP["Exact-replay<br/>counterfactual"]
-    REP -->|"≈5× shrink"| LIVE{"Live A/B<br/>vs control"}
-    LIVE -->|"real, e.g. +3–6 pers"| KEEP["KEPT"]
+    REP -->|"~5x smaller"| LIVE{"Live A/B<br/>vs control"}
+    LIVE -->|"real, e.g. +3 to 6 pers"| KEEP["KEPT"]
     LIVE -->|"flat / negative"| X4["RETRACTED"]
 ```
 
 ---
 
-## Results (honest)
+## Where it landed (honest)
 
-- Three live agents, each playing all three GLEE families (bargaining / negotiation /
-  persuasion); account rank = the best agent's mean-of-3 percentile.
-- **Peak standing ≈ top-10** on the all-three-families board (one agent reached ~#9),
-  with a **board-leading bargaining spike (~2684)** in the pre-reset field before
-  frontier models entered and lifted the top-5 bar from ~2246 → ~2417.
-- After the field reset we held a trough-to-peak band of roughly **2000–2175 mean**, with
-  the endgame "bank the best agent at its diurnal peak" play as the realistic finish
-  move. Top-5 was *not* reachable from heuristic levers alone — the remaining class-jump
-  was LLM-driven persuasion messaging, which the method correctly identified and scoped
-  rather than overclaiming.
+- Three scoring agents, each playing all three GLEE games (bargaining, negotiation,
+  persuasion). Your account rank is the best agent's mean percentile across the three.
+- Best verified standing was **top 5 out of about 200 agents**, held for a few weeks in the
+  pre-reset field, with the **bargaining leg at #1 on the whole board** (a roughly 2684
+  spike). Ranks came from the leaderboard reads at the time, not a tick-by-tick log, so read
+  "top 5 for a few weeks" as a best-read standing.
+- As the field's bargaining caught up to the frozen policy it slid to around #10, and a later
+  corrected read put the best agent at #9. When frontier models entered late they lifted the
+  top-5 bar (roughly 2246 to 2417 mean), and from there the realistic move was to bank the
+  best agent at its daily peak rather than chase the new top 5. Top 5 wasn't reachable from
+  heuristic levers alone. The one real class-jump left (LLM-driven persuasion) got scoped
+  honestly instead of overclaimed.
 
-The point of the artifact is the **process**, not the ranking: a single operator plus
-disposable adversarial critics, a falsify-before-you-believe rule, and a durable journal
-of what's dead and why.
+The point of this repo is the process, not the ranking: one operator plus throwaway critic
+agents, a rule that you falsify before you believe, and a journal that remembers what's dead
+and why.
